@@ -7,13 +7,13 @@
 
     <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
     <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <!-- <script defer src="./pyscript.js"></script> -->
 
     <title>PyScript x Altair</title>
     <py-env>
 - ipython
 - pandas
 - altair
-- termios
 - vega_datasets
     </py-env>
 </head>
@@ -22,23 +22,23 @@
     <div id="dashboard"></div>
     <py-script output="dashboard">
 import altair as alt
-import termios
 from vega_datasets import data
 
 df = data.movies.url
 pts = alt.selection(type="single", encodings=['x'])
-<!-- brush = alt.selection(type="interval") -->
+brush = alt.selection(type="interval")
 
 rect = alt.Chart(df).mark_bar().encode(
     alt.X('IMDB_Rating:Q', bin=True),
     alt.Y('Rotten_Tomatoes_Rating:Q', bin=True),
     color=alt.condition(pts, 'Rotten_Tomatoes_Rating:Q', alt.value('lightgray'))
+).add_selection(
+    pts
 )
-<!-- .add_selection(
-    brush
-) -->
 
-circ = rect.mark_point().encode(
+rect 
+
+<!-- circ = alt.Chart(df).mark_point().encode(
     alt.ColorValue('lightgray'),
     alt.Size(
         'count()',
@@ -48,9 +48,14 @@ circ = rect.mark_point().encode(
     pts
 )
 
-text = alt.Chart(df).mark_text().encode(
+rect | circ -->
+
+
+<!-- text = alt.Chart(df).mark_text().encode(
     y=alt.Y('row_number:0', axis=None)
-).transform_window(
+) -->
+<!-- 
+.transform_window(
     row_number='row_number()'
 ).transform_filter(
     pts
@@ -58,8 +63,11 @@ text = alt.Chart(df).mark_text().encode(
     rank='rank(row_number)'
 ).transform_filter(
     alt.datum.rank < 20
-)
+) -->
 
+<!-- rect | circ | text -->
+
+<!-- 
 ratings = text.encode(
     text = 'Rotten_Tomatoes_Rating:Q'
 )
@@ -81,17 +89,16 @@ bar = alt.Chart(df).mark_bar().encode(
     height=250
 ).add_selection(
     pts
-)
+) -->
 
-<!-- (rect | ratings | moviename | line ) & bar -->
+<!-- (rect | ratings | moviename | line ) & bar
 alt.vconcat(
     (rect + circ | ratings | moviename | line ),
     bar
 ).resolve_legend(
     color='independent',
     size='independent'
-)
-
+) -->
 
     </py-script>
     <py-script src="./templates/plot1.py"></py-script>    
